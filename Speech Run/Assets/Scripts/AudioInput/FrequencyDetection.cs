@@ -40,6 +40,8 @@ public class FrequencyDetection : MonoBehaviour
         return GetLoudnessFromAudioClip(Microphone.GetPosition(Microphone.devices[0]), microphoneClip);
     }
 
+
+
     /// <summary>
     /// Calculates the average loudness of an audio clip within a specified sample window at the given position.
     /// </summary>
