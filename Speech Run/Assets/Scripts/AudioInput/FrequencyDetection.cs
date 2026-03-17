@@ -6,7 +6,7 @@ public class FrequencyDetection : MonoBehaviour
     private AudioClip microphoneClip;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
         MicrophoneToAudioClip();
 
@@ -23,7 +23,7 @@ public class FrequencyDetection : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
     }
 
@@ -39,8 +39,6 @@ public class FrequencyDetection : MonoBehaviour
     {
         return GetLoudnessFromAudioClip(Microphone.GetPosition(Microphone.devices[0]), microphoneClip);
     }
-
-
 
     /// <summary>
     /// Calculates the average loudness of an audio clip within a specified sample window at the given position.
