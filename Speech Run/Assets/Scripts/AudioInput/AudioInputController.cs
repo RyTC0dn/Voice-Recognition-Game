@@ -5,28 +5,41 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Windows.Speech;
 
-public class CharacterController : MonoBehaviour
+public class AudioInputController : MonoBehaviour
 {
-    [SerializeField]
-    private Rigidbody characterPrefab;
+    private Rigidbody rb;
 
     private AudioClip audioClip;
 
     private Dictionary<string, Action> keywordActions = new Dictionary<string, Action>();
     private KeywordRecognizer keywordRecognizer;
 
-    [SerializeField] private bool isStop = true;
-    [SerializeField] private float characterSpeed = 1.0f;
+    [SerializeField]
+    private bool isStop, moveBack, isGround;
+
+    [SerializeField]
+    [Range(0, 1)] private float characterSpeed = 1.0f;
+
+    [SerializeField]
+    [Range(0, 100)] private float detectionRange = 0.0f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
+        rb = GetComponent<Rigidbody>();
+
         MicrophoneAudio();
+
+        #region Keyword Dictionary
+
         keywordActions.Add("turn right", TurnRight);
         keywordActions.Add("turn left", TurnLeft);
         keywordActions.Add("start", Forward);
         keywordActions.Add("back", Back);
         keywordActions.Add("stop", Stop);
+        keywordActions.Add("jump", Jump);
+
+        #endregion Keyword Dictionary
 
         keywordRecognizer = new KeywordRecognizer(keywordActions.Keys.ToArray());
         keywordRecognizer.OnPhraseRecognized += OnKeywordRecognized;
@@ -35,14 +48,7 @@ public class CharacterController : MonoBehaviour
 
     private void Update()
     {
-        if (!isStop)
-        {
-            transform.position += Vector3.forward * characterSpeed * Time.deltaTime;
-        }
-        else
-        {
-            transform.position = Vector3.zero;
-        }
+        InputHandler();
     }
 
     private void OnKeywordRecognized(PhraseRecognizedEventArgs args)
@@ -58,6 +64,24 @@ public class CharacterController : MonoBehaviour
 
         //Have the microphone start recording commands
         audioClip = Microphone.Start(microphoneName, true, 20, AudioSettings.outputSampleRate);
+    }
+
+    private void InputHandler()
+    {
+        if (!isStop)
+        {
+            rb.AddForce(transform.forward * characterSpeed, ForceMode.Impulse);
+        }
+        else if (moveBack)
+        {
+            rb.AddForce(-transform.forward * characterSpeed, ForceMode.Impulse);
+        }
+        else
+        {
+            rb.AddForce(transform.position * 0, ForceMode.Impulse);
+        }
+
+        //Physics.Raycast(rb.position, Vector3.down, detectionRange);
     }
 
     //List of actions for the object
@@ -79,11 +103,15 @@ public class CharacterController : MonoBehaviour
 
     private void Back()
     {
-        transform.position = Vector3.back;
+        moveBack = true;
     }
 
     private void Stop()
     {
         isStop = true;
+    }
+
+    private void Jump()
+    {
     }
 }
