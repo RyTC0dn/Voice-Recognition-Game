@@ -142,7 +142,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &456597576800325473
 MonoBehaviour:
@@ -159,8 +159,9 @@ MonoBehaviour:
   isStop: 1
   moveBack: 0
   isGround: 0
-  characterSpeed: 0.025
-  detectionRange: 0
+  characterSpeed: 0.156
+  jumpForce: 4.51
+  detectionRange: 2.8
 --- !u!1 &3769052670596607687
 GameObject:
   m_ObjectHideFlags: 0

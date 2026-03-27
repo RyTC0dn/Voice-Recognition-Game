@@ -17,8 +17,13 @@ public class AudioInputController : MonoBehaviour
     [SerializeField]
     private bool isStop, moveBack, isGround;
 
+    private bool input = false;
+
     [SerializeField]
     [Range(0, 1)] private float characterSpeed = 1.0f;
+
+    [SerializeField]
+    private float jumpForce = 2.0f;
 
     [SerializeField]
     [Range(0, 100)] private float detectionRange = 0.0f;
@@ -46,9 +51,11 @@ public class AudioInputController : MonoBehaviour
         keywordRecognizer.Start();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         InputHandler();
+        AirBehaviour();
+        //isGround = Physics.Raycast(transform.position, Vector3.down, detectionRange, jumpableLayer);
     }
 
     private void OnKeywordRecognized(PhraseRecognizedEventArgs args)
@@ -76,12 +83,19 @@ public class AudioInputController : MonoBehaviour
         {
             rb.AddForce(-transform.forward * characterSpeed, ForceMode.Impulse);
         }
-        else
+        else if (isStop)
         {
             rb.AddForce(transform.position * 0, ForceMode.Impulse);
         }
+    }
 
-        //Physics.Raycast(rb.position, Vector3.down, detectionRange);
+    private void AirBehaviour()
+    {
+        if (input)
+        {
+            rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+            input = false;
+        }
     }
 
     //List of actions for the object
@@ -113,5 +127,12 @@ public class AudioInputController : MonoBehaviour
 
     private void Jump()
     {
+        input = true;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(transform.position, Vector3.down * detectionRange);
     }
 }
