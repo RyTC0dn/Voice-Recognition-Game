@@ -129,10 +129,4 @@ public class AudioInputController : MonoBehaviour
     {
         input = true;
     }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(transform.position, Vector3.down * detectionRange);
-    }
 }
