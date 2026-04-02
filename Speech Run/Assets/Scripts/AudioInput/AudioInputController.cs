@@ -20,7 +20,7 @@ public class AudioInputController : MonoBehaviour
     private bool input = false;
 
     [SerializeField]
-    [Range(0, 1)] private float characterSpeed = 1.0f;
+    private float characterSpeed = 1.0f;
 
     [SerializeField]
     private float jumpForce = 2.0f;
@@ -40,7 +40,7 @@ public class AudioInputController : MonoBehaviour
         keywordActions.Add("turn right", TurnRight);
         keywordActions.Add("turn left", TurnLeft);
         keywordActions.Add("move", Forward);
-        keywordActions.Add("back", Back);
+        //keywordActions.Add("back", Back);
         keywordActions.Add("stop", Stop);
         keywordActions.Add("jump", Jump);
 
@@ -79,15 +79,15 @@ public class AudioInputController : MonoBehaviour
         if (!isStop)
         {
             //Moves the character forward at consistent speed
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y, transform.forward.z * characterSpeed);
+            rb.linearVelocity = new Vector3(transform.forward.x * characterSpeed, rb.linearVelocity.y, transform.forward.z * characterSpeed);
         }
         else if (moveBack)
         {
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y, -transform.forward.z * characterSpeed);
+            rb.linearVelocity = new Vector3(-transform.forward.x * characterSpeed, rb.linearVelocity.y, -transform.forward.z * characterSpeed);
         }
-        else if (isStop)
+        if (isStop)
         {
-            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
+            rb.linearVelocity = new Vector3(transform.position.x * 0, rb.linearVelocity.y, transform.position.z * 0);
         }
     }
 
@@ -119,10 +119,10 @@ public class AudioInputController : MonoBehaviour
         isStop = false;
     }
 
-    private void Back()
-    {
-        moveBack = true;
-    }
+    //private void Back()
+    //{
+    //    moveBack = true;
+    //}
 
     private void Stop()
     {

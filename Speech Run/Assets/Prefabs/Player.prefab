@@ -159,7 +159,7 @@ MonoBehaviour:
   isStop: 1
   moveBack: 0
   isGround: 0
-  characterSpeed: 0.156
+  characterSpeed: 0.771
   jumpForce: 4.51
   detectionRange: 2.8
 --- !u!1 &3769052670596607687
