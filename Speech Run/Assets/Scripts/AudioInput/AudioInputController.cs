@@ -39,7 +39,7 @@ public class AudioInputController : MonoBehaviour
 
         keywordActions.Add("turn right", TurnRight);
         keywordActions.Add("turn left", TurnLeft);
-        keywordActions.Add("start", Forward);
+        keywordActions.Add("move", Forward);
         keywordActions.Add("back", Back);
         keywordActions.Add("stop", Stop);
         keywordActions.Add("jump", Jump);
@@ -75,17 +75,19 @@ public class AudioInputController : MonoBehaviour
 
     private void InputHandler()
     {
+        //Handles the movement of the character based on the voice commands
         if (!isStop)
         {
-            rb.AddForce(transform.forward * characterSpeed, ForceMode.Impulse);
+            //Moves the character forward at consistent speed
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y, transform.forward.z * characterSpeed);
         }
         else if (moveBack)
         {
-            rb.AddForce(-transform.forward * characterSpeed, ForceMode.Impulse);
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y, -transform.forward.z * characterSpeed);
         }
         else if (isStop)
         {
-            rb.AddForce(transform.position * 0, ForceMode.Impulse);
+            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
         }
     }
 
@@ -97,6 +99,8 @@ public class AudioInputController : MonoBehaviour
             input = false;
         }
     }
+
+    #region Function Actions
 
     //List of actions for the object
 
@@ -129,4 +133,6 @@ public class AudioInputController : MonoBehaviour
     {
         input = true;
     }
+
+    #endregion Function Actions
 }

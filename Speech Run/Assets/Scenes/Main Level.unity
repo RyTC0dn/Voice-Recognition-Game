@@ -171,6 +171,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: DemoScene
       objectReference: {fileID: 0}
+    - target: {fileID: 8238790401409326391, guid: 74e8e1c76d258bc4c9f071738ea495aa, type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8238790401409326391, guid: 74e8e1c76d258bc4c9f071738ea495aa, type: 3}
+      propertyPath: m_ProvidesContacts
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
