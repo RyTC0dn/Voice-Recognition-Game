@@ -37,12 +37,16 @@ public class AudioInputController : MonoBehaviour
 
         #region Keyword Dictionary
 
+        //Player movement commands
         keywordActions.Add("turn right", TurnRight);
         keywordActions.Add("turn left", TurnLeft);
         keywordActions.Add("move", Forward);
-        //keywordActions.Add("back", Back);
         keywordActions.Add("stop", Stop);
         keywordActions.Add("jump", Jump);
+
+        //Menu commands
+        keywordActions.Add("close", Back);
+        keywordActions.Add("open", OpenMenu);
 
         #endregion Keyword Dictionary
 
@@ -61,6 +65,7 @@ public class AudioInputController : MonoBehaviour
     private void OnKeywordRecognized(PhraseRecognizedEventArgs args)
     {
         Debug.Log("Keyword: " + args.text);
+        GameManager.Instance.DisplayCommand(args.text);
         keywordActions[args.text].Invoke();
     }
 
@@ -119,10 +124,15 @@ public class AudioInputController : MonoBehaviour
         isStop = false;
     }
 
-    //private void Back()
-    //{
-    //    moveBack = true;
-    //}
+    private void Back()
+    {
+        GameManager.Instance.HideMenu();
+    }
+
+    private void OpenMenu()
+    {
+        GameManager.Instance.ShowMenu();
+    }
 
     private void Stop()
     {
