@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum GameStates
 {
@@ -70,6 +71,11 @@ public class GameManager : MonoBehaviour
     public void DisplayCommand(string command)
     {
         commandText.text = "Command: " + command;
+    }
+
+    public void EndGame()
+    {
+        SceneManager.LoadScene("EndScreen");
     }
 
     public void ChangeStates(GameStates state)

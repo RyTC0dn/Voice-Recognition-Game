@@ -9,16 +9,24 @@ public class AudioInputController : MonoBehaviour
 {
     private Rigidbody rb;
 
+    [Header("Audio Settings")]
     private AudioClip audioClip;
+
+    public int sampleWindow = 64;
+    public float loudnessSensibility = 100;
+    public float threshold = 0.1f;
 
     private Dictionary<string, Action> keywordActions = new Dictionary<string, Action>();
     private KeywordRecognizer keywordRecognizer;
 
+    [Space(20)]
     [SerializeField]
     private bool isStop, moveBack, isGround;
 
     private bool input = false;
+    private bool wordRecognized = false;
 
+    [Header("Character Settings")]
     [SerializeField]
     private float characterSpeed = 1.0f;
 
@@ -59,7 +67,6 @@ public class AudioInputController : MonoBehaviour
     {
         InputHandler();
         AirBehaviour();
-        //isGround = Physics.Raycast(transform.position, Vector3.down, detectionRange, jumpableLayer);
     }
 
     private void OnKeywordRecognized(PhraseRecognizedEventArgs args)
@@ -67,6 +74,7 @@ public class AudioInputController : MonoBehaviour
         Debug.Log("Keyword: " + args.text);
         GameManager.Instance.DisplayCommand(args.text);
         keywordActions[args.text].Invoke();
+        wordRecognized = true;
     }
 
     public void MicrophoneAudio()
@@ -145,4 +153,39 @@ public class AudioInputController : MonoBehaviour
     }
 
     #endregion Function Actions
+
+    #region Audio Analysis
+
+    /// <summary>
+    /// Gets the current loudness level from the microphone input.
+    /// </summary>
+    /// <remarks>This method retrieves the loudness by accessing the microphone's audio input and processing
+    /// it through the specified audio clip. Ensure that the microphone is properly initialized and that audio
+    /// permissions are granted before calling this method.</remarks>
+    /// <returns>A float representing the loudness level, measured in decibels, based on the audio captured from the microphone.</returns>
+    public float GetLoudnessFromMicrophone()
+    {
+        return GetLoudnessFromAudioClip(Microphone.GetPosition(Microphone.devices[0]), audioClip);
+    }
+
+    /// <summary>
+    /// Calculates the loudness from a given audio clip.
+    /// </summary>
+    /// <param name="clipPosition">The current position in the audio clip.</param>
+    /// <param name="clip">The audio clip to analyze.</param>
+    /// <returns>The calculated loudness.</returns>
+    private float GetLoudnessFromAudioClip(int clipPosition, AudioClip clip)
+    {
+        int startPosition = clipPosition - sampleWindow;
+        float[] waveData = new float[sampleWindow];
+        clip.GetData(waveData, startPosition);
+        float totalLoudness = 0;
+        foreach (float sample in waveData)
+        {
+            totalLoudness += Mathf.Abs(sample);
+        }
+        return totalLoudness / 128;
+    }
+
+    #endregion Audio Analysis
 }
