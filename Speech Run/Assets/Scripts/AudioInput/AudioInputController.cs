@@ -9,16 +9,29 @@ public class AudioInputController : MonoBehaviour
 {
     private Rigidbody rb;
 
+    [Header("Audio Settings")]
     private AudioClip audioClip;
+
+    public int sampleWindow = 64;
+    public float loudnessSensibility = 100;
+    public float threshold = 0.1f;
 
     private Dictionary<string, Action> keywordActions = new Dictionary<string, Action>();
     private KeywordRecognizer keywordRecognizer;
 
+    [Space(20)]
     [SerializeField]
     private bool isStop, moveBack, isGround;
 
+    private bool input = false;
+    private bool wordRecognized = false;
+
+    [Header("Character Settings")]
     [SerializeField]
-    [Range(0, 1)] private float characterSpeed = 1.0f;
+    private float characterSpeed = 1.0f;
+
+    [SerializeField]
+    private float jumpForce = 2.0f;
 
     [SerializeField]
     [Range(0, 100)] private float detectionRange = 0.0f;
@@ -32,12 +45,16 @@ public class AudioInputController : MonoBehaviour
 
         #region Keyword Dictionary
 
+        //Player movement commands
         keywordActions.Add("turn right", TurnRight);
         keywordActions.Add("turn left", TurnLeft);
-        keywordActions.Add("start", Forward);
-        keywordActions.Add("back", Back);
+        keywordActions.Add("move", Forward);
         keywordActions.Add("stop", Stop);
         keywordActions.Add("jump", Jump);
+
+        //Menu commands
+        keywordActions.Add("close", Back);
+        keywordActions.Add("open", OpenMenu);
 
         #endregion Keyword Dictionary
 
@@ -46,15 +63,18 @@ public class AudioInputController : MonoBehaviour
         keywordRecognizer.Start();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         InputHandler();
+        AirBehaviour();
     }
 
     private void OnKeywordRecognized(PhraseRecognizedEventArgs args)
     {
         Debug.Log("Keyword: " + args.text);
+        GameManager.Instance.DisplayCommand(args.text);
         keywordActions[args.text].Invoke();
+        wordRecognized = true;
     }
 
     public void MicrophoneAudio()
@@ -68,21 +88,32 @@ public class AudioInputController : MonoBehaviour
 
     private void InputHandler()
     {
+        //Handles the movement of the character based on the voice commands
         if (!isStop)
         {
-            rb.AddForce(transform.forward * characterSpeed, ForceMode.Impulse);
+            //Moves the character forward at consistent speed
+            rb.linearVelocity = new Vector3(transform.forward.x * characterSpeed, rb.linearVelocity.y, transform.forward.z * characterSpeed);
         }
         else if (moveBack)
         {
-            rb.AddForce(-transform.forward * characterSpeed, ForceMode.Impulse);
+            rb.linearVelocity = new Vector3(-transform.forward.x * characterSpeed, rb.linearVelocity.y, -transform.forward.z * characterSpeed);
         }
-        else
+        if (isStop)
         {
-            rb.AddForce(transform.position * 0, ForceMode.Impulse);
+            rb.linearVelocity = new Vector3(transform.position.x * 0, rb.linearVelocity.y, transform.position.z * 0);
         }
-
-        //Physics.Raycast(rb.position, Vector3.down, detectionRange);
     }
+
+    private void AirBehaviour()
+    {
+        if (input)
+        {
+            rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+            input = false;
+        }
+    }
+
+    #region Function Actions
 
     //List of actions for the object
 
@@ -103,7 +134,12 @@ public class AudioInputController : MonoBehaviour
 
     private void Back()
     {
-        moveBack = true;
+        GameManager.Instance.HideMenu();
+    }
+
+    private void OpenMenu()
+    {
+        GameManager.Instance.ShowMenu();
     }
 
     private void Stop()
@@ -113,5 +149,43 @@ public class AudioInputController : MonoBehaviour
 
     private void Jump()
     {
+        input = true;
     }
+
+    #endregion Function Actions
+
+    #region Audio Analysis
+
+    /// <summary>
+    /// Gets the current loudness level from the microphone input.
+    /// </summary>
+    /// <remarks>This method retrieves the loudness by accessing the microphone's audio input and processing
+    /// it through the specified audio clip. Ensure that the microphone is properly initialized and that audio
+    /// permissions are granted before calling this method.</remarks>
+    /// <returns>A float representing the loudness level, measured in decibels, based on the audio captured from the microphone.</returns>
+    public float GetLoudnessFromMicrophone()
+    {
+        return GetLoudnessFromAudioClip(Microphone.GetPosition(Microphone.devices[0]), audioClip);
+    }
+
+    /// <summary>
+    /// Calculates the loudness from a given audio clip.
+    /// </summary>
+    /// <param name="clipPosition">The current position in the audio clip.</param>
+    /// <param name="clip">The audio clip to analyze.</param>
+    /// <returns>The calculated loudness.</returns>
+    private float GetLoudnessFromAudioClip(int clipPosition, AudioClip clip)
+    {
+        int startPosition = clipPosition - sampleWindow;
+        float[] waveData = new float[sampleWindow];
+        clip.GetData(waveData, startPosition);
+        float totalLoudness = 0;
+        foreach (float sample in waveData)
+        {
+            totalLoudness += Mathf.Abs(sample);
+        }
+        return totalLoudness / 128;
+    }
+
+    #endregion Audio Analysis
 }

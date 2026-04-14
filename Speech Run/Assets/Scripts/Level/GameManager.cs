@@ -1,0 +1,118 @@
+using TMPro;
+using Unity.VectorGraphics;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public enum GameStates
+{
+    None,
+    Play,
+    Pause
+}
+
+public class GameManager : MonoBehaviour
+{
+    public static GameManager Instance { get; private set; }
+
+    [Header("UI Elements")]
+    public TextMeshProUGUI timeText;
+
+    public TextMeshProUGUI commandText;
+    public GameObject menuPanel;
+    [HideInInspector] public float timer;
+
+    [Space(20)]
+    public GameObject startPos;
+
+    private string sceneName;
+    private GameObject player;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+
+        menuPanel.SetActive(false);
+    }
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private void Start()
+    {
+        sceneName = SceneManager.GetActiveScene().name;
+        if (sceneName == "EndScreen")
+        {
+            timeText = GameObject.Find("EndTimeText").GetComponent<TextMeshProUGUI>();
+            EndTimer();
+        }
+
+        player = GameObject.Find("Player");
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+        if (sceneName == "Main Level")
+            SetTimer();
+    }
+
+    #region Menu Methods
+
+    public void ShowMenu()
+    {
+        menuPanel.SetActive(true);
+        ChangeStates(GameStates.Pause);
+    }
+
+    public void HideMenu()
+    {
+        menuPanel.SetActive(false);
+        ChangeStates(GameStates.Play);
+    }
+
+    #endregion Menu Methods
+
+    // Set the timer and update the time text
+    private void SetTimer()
+    {
+        timer += Time.deltaTime;
+        timeText.text = "Time: " + timer.ToString("F2");
+    }
+
+    private void EndTimer()
+    {
+        timeText.text = "Your Time was: " + GameManager.Instance.timer.ToString("F2");
+    }
+
+    public void DisplayCommand(string command)
+    {
+        commandText.text = "Command: " + command;
+    }
+
+    public void EndGame()
+    {
+        SceneManager.LoadScene("EndScreen");
+    }
+
+    public void ChangeStates(GameStates state)
+    {
+        switch (state)
+        {
+            case GameStates.None:
+                break;
+
+            case GameStates.Play:
+                Time.timeScale = 1f;
+                break;
+
+            case GameStates.Pause:
+                Time.timeScale = 0f;
+                break;
+
+            default:
+                break;
+        }
+    }
+}
