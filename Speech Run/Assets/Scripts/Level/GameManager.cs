@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,10 +19,13 @@ public class GameManager : MonoBehaviour
 
     public TextMeshProUGUI commandText;
     public GameObject menuPanel;
-    private float timer;
+    [HideInInspector] public float timer;
 
     [Space(20)]
     public GameObject startPos;
+
+    private string sceneName;
+    private GameObject player;
 
     private void Awake()
     {
@@ -37,12 +41,21 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
+        sceneName = SceneManager.GetActiveScene().name;
+        if (sceneName == "EndScreen")
+        {
+            timeText = GameObject.Find("EndTimeText").GetComponent<TextMeshProUGUI>();
+            EndTimer();
+        }
+
+        player = GameObject.Find("Player");
     }
 
     // Update is called once per frame
     private void Update()
     {
-        SetTimer();
+        if (sceneName == "Main Level")
+            SetTimer();
     }
 
     #region Menu Methods
@@ -66,6 +79,11 @@ public class GameManager : MonoBehaviour
     {
         timer += Time.deltaTime;
         timeText.text = "Time: " + timer.ToString("F2");
+    }
+
+    private void EndTimer()
+    {
+        timeText.text = "Your Time was: " + GameManager.Instance.timer.ToString("F2");
     }
 
     public void DisplayCommand(string command)
