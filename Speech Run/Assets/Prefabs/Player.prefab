@@ -156,10 +156,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4c9abb1b4842c447ba9118bc6532bd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterController
+  sampleWindow: 64
+  loudnessSensibility: 100
+  threshold: 0.1
   isStop: 1
   moveBack: 0
   isGround: 0
-  characterSpeed: 2
+  characterSpeed: 2.5
   jumpForce: 12.48
   detectionRange: 2.8
 --- !u!1 &3769052670596607687
