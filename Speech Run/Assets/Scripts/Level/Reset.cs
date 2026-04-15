@@ -2,17 +2,18 @@ using UnityEngine;
 
 public class Reset : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
         //Check for player tag and reset position to start position
-        if (other.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
-            other.transform.position =
+            collision.gameObject.transform.position =
                 GameManager.Instance.startPos.transform.position;
         }
         else
         {
-            Debug.LogWarning("Object with tag " + other.tag + " entered reset trigger.");
+            Debug.LogWarning("Object with tag " + collision.gameObject.tag + " entered reset trigger.");
         }
+
     }
 }
