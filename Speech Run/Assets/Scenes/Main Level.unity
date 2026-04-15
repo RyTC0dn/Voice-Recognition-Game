@@ -2379,12 +2379,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Cinemachine::Cinemachine.CinemachineTransposer
   m_BindingMode: 1
   m_FollowOffset: {x: 6.83, y: 7.89, z: -10}
-  m_XDamping: 1
+  m_XDamping: 6.5
   m_YDamping: 1
   m_ZDamping: 1
   m_AngularDampingMode: 0
   m_PitchDamping: 0
-  m_YawDamping: 0
+  m_YawDamping: 3
   m_RollDamping: 0
   m_AngularDamping: 0
 --- !u!114 &1004645402
