@@ -55,7 +55,11 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         if (sceneName == "Main Level")
+        {
+            startPos = GameObject.Find("Startingpoint").GetComponent<GameObject>();
             SetTimer();
+        }
+            
     }
 
     #region Menu Methods

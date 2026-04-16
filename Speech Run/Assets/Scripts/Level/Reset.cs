@@ -10,10 +10,6 @@ public class Reset : MonoBehaviour
             collision.gameObject.transform.position =
                 GameManager.Instance.startPos.transform.position;
         }
-        else
-        {
-            Debug.LogWarning("Object with tag " + collision.gameObject.tag + " entered reset trigger.");
-        }
 
     }
 }
