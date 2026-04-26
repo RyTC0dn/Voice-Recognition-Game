@@ -1,5 +1,7 @@
 using UnityEngine;
 
+/// <summary>This class is a practice script for detecting the loudness of an audio clip, specifically from microphone input. It captures audio data from the microphone and calculates the average loudness over a specified sample window. The loudness is determined by averaging the absolute values of the audio samples within that window, providing a measure of how loud the input is at any given moment.</summary>
+
 public class FrequencyDetection : MonoBehaviour
 {
     public int sampleWindow = 64;

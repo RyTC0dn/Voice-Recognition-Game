@@ -53,8 +53,10 @@ public class AudioInputController : MonoBehaviour
         keywordActions.Add("jump", Jump);
 
         //Menu commands
-        keywordActions.Add("close", Back);
-        keywordActions.Add("open", OpenMenu);
+        keywordActions.Add("back", Back);
+        keywordActions.Add("controls", OpenControlsMenu);
+        keywordActions.Add("pause", OpenPauseMenu);
+        keywordActions.Add("resume", Resume);
 
         #endregion Keyword Dictionary
 
@@ -134,12 +136,22 @@ public class AudioInputController : MonoBehaviour
 
     private void Back()
     {
-        GameManager.Instance.HideMenu();
+        GameManager.Instance.BackToPause();
     }
 
-    private void OpenMenu()
+    private void OpenControlsMenu()
     {
         GameManager.Instance.ShowMenu();
+    }
+
+    private void OpenPauseMenu()
+    {
+        GameManager.Instance.PauseMenu();
+    }
+
+    private void Resume()
+    {
+        GameManager.Instance.Resume();
     }
 
     private void Stop()

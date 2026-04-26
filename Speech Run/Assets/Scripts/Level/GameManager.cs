@@ -19,12 +19,17 @@ public class GameManager : MonoBehaviour
 
     public TextMeshProUGUI commandText;
     public GameObject menuPanel;
-    [HideInInspector] public float timer;
+    public GameObject pauseMenu;
+    public GameObject menuUI;
+    [HideInInspector] public static float timer;
+
+    public bool isPaused = false;
+    public bool isStarted = false;
 
     [Space(20)]
     public GameObject startPos;
 
-    private string sceneName;
+    [HideInInspector] public string sceneName;
     private GameObject player;
 
     private void Awake()
@@ -33,6 +38,10 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
         }
 
         menuPanel.SetActive(false);
@@ -49,31 +58,62 @@ public class GameManager : MonoBehaviour
         }
 
         player = GameObject.Find("Player");
+        pauseMenu.SetActive(false);
     }
 
     // Update is called once per frame
     private void Update()
     {
-        if (sceneName == "Main Level")
-        {
-            startPos = GameObject.Find("Startingpoint").GetComponent<GameObject>();
-            SetTimer();
-        }
-            
+        if (!isStarted) return;
+
+        SetTimer();
     }
 
     #region Menu Methods
 
     public void ShowMenu()
     {
+        if (!isPaused) return;
+
+        menuUI.SetActive(false);
+        pauseMenu.SetActive(false);
+
         menuPanel.SetActive(true);
+
         ChangeStates(GameStates.Pause);
     }
 
-    public void HideMenu()
+    public void BackToPause()
+    {
+        if (!isPaused) return;
+
+        menuPanel.SetActive(false);
+
+        pauseMenu.SetActive(true);
+
+        ChangeStates(GameStates.Play);
+    }
+
+    public void Resume()
     {
         menuPanel.SetActive(false);
+        pauseMenu.SetActive(false);
+
+        menuUI.SetActive(true);
+
+        isPaused = false;
         ChangeStates(GameStates.Play);
+    }
+
+    public void PauseMenu()
+    {
+        menuUI.SetActive(false);
+        menuPanel.SetActive(false);
+
+        pauseMenu.SetActive(true);
+
+        isPaused = true;
+        ChangeStates(GameStates.Pause);
     }
 
     #endregion Menu Methods
@@ -87,7 +127,7 @@ public class GameManager : MonoBehaviour
 
     private void EndTimer()
     {
-        timeText.text = "Your Time was: " + GameManager.Instance.timer.ToString("F2");
+        timeText.text = "Your Time was: " + GameManager.timer.ToString("F2");
     }
 
     public void DisplayCommand(string command)

@@ -53,7 +53,9 @@ public class UIInputControl : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("Main Level");
+        GameManager.Instance.isStarted = true;
+
+        SceneManager.LoadSceneAsync("Main Level", LoadSceneMode.Single);
     }
 
     public void LoadMainMenu()
@@ -65,7 +67,18 @@ public class UIInputControl : MonoBehaviour
     {
         // If we are running in a standalone build of the game
         if (Application.isPlaying)
-            Application.Quit();//Close the application
+        {
+            if (GameManager.Instance.sceneName == "MainLevel")
+            {
+                if (!GameManager.Instance.isPaused) return;
+
+                Application.Quit();//Close the application only when paused
+            }
+            else
+            {
+                Application.Quit();//Close the application
+            }
+        }
     }
 
     #endregion Menu Methods
