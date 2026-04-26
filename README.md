@@ -49,3 +49,11 @@ Core Input development (6-7 hours) - developing the coding scripts for the base 
 Level Implementation (3-5 hours) - putting together the actual obstacle course level of the game, since the game will be within a 2D environment, I will be using top-down asset packs to develop the level. 
 Polish (3-5 hours) -  the final steps of the development cycle is to polish the design and finalize any visual design (UI) components required for the experience. 
 
+## Third-Party Assets & Dependencies
+This project may reference or depend on third-party assets and tools that are not voered under the **MIT License**. These include a Unity Asset Store Package. 
+
+All third-party content remains the property of its respective oweners and is subject to its own licensing terms.
+
+## Attribution & Usage Notes
+- This repositiory is intended for **educational, portfolio, and demonstration purposes**.
+
