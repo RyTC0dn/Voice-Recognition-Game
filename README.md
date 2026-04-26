@@ -7,17 +7,20 @@ Ryan Thompson
 
 
 ## Preface
-“Developing a simplistic 2D obstacle course game entirely controlled through voice recognition input.”
+“Developing a simplistic 3D obstacle course game entirely controlled through voice recognition input.”
 
 ## Design Considerations
 ### Emotions
 The primary emotional goals of this experience are: 
 - Enjoyment
 - Empowerment
+- Tension
 
 **Enjoyment** mainly from the expressive and sometimes unpredictable nature of voice-based controls. Because vocal input can vary in tone, clarity, and timing, the gameplay may produce humorous or unexpected moments. These moments can encourage a playful, welcoming atmosphere where they get to experience the chaotic interactions that come through speech controls.
 
 **Empowerment** comes from the player’s ability to directly command the character using their own voice. Instead of relying on traditional inputs such as buttons or joysticks, the player issues verbal commands directly to the controller, which translates to movement within the game. This is to inspire that sense of agency from the player, where they will feel more responsible for directing their character’s actions.
+
+**Tension** as you navigate around the environment, narrowly making it to the finish line while trying to control a character through voice inputs. Since the voice commands can have a delay in input, each input needs to be timed accordingly to ensure that you make it across without being sent back to the beginning.
 
 
 
