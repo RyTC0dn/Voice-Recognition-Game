@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public static float timer;
 
     public bool isPaused = false;
+    public bool isStarted = false;
 
     [Space(20)]
     public GameObject startPos;
@@ -37,6 +38,10 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
         }
 
         menuPanel.SetActive(false);
@@ -59,8 +64,9 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (sceneName == "Main Level")
-            SetTimer();
+        if (!isStarted) return;
+
+        SetTimer();
     }
 
     #region Menu Methods

@@ -53,7 +53,9 @@ public class UIInputControl : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("Main Level");
+        GameManager.Instance.isStarted = true;
+
+        SceneManager.LoadSceneAsync("Main Level", LoadSceneMode.Single);
     }
 
     public void LoadMainMenu()
